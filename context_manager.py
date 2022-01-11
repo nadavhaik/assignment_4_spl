@@ -1,4 +1,4 @@
-from database import DataBase
+from repository import Repository
 
 
 class ContextManager:
@@ -7,7 +7,7 @@ class ContextManager:
         self.orders_file_path = orders_file_path
         self.output_file_path = output_file_path
         self.output = ""
-        self.db = DataBase(output_db_path)
+        self.rep = Repository(output_db_path)
 
     def write_output_file(self):
         with open(self.output_file_path, 'w') as output_file:
@@ -24,13 +24,13 @@ class ContextManager:
         # Creating suppliers before hats:
         for i in range(number_of_hats + 1, number_of_hats + number_of_suppliers + 1):
             iD, name = config_lines[i].split(sep=",")
-            self.db.suppliers.insert(iD, name)
+            self.rep.suppliers.insert(iD, name)
 
         for i in range(1, number_of_hats + 1):
             iD, topping, supplier, quantity = config_lines[i].split(sep=",")
-            self.db.hats.insert(iD, topping, supplier, quantity)
+            self.rep.hats.insert(iD, topping, supplier, quantity)
 
-        self.db.commit()
+        self.rep.commit()
 
     def execute_orders(self):
         with open(self.orders_file_path) as file:
@@ -39,15 +39,15 @@ class ContextManager:
         line_num = 1
         for order_line in order_lines:
             location, topping = order_line.split(",")
-            result = self.db.hats.get_next_by_topping(topping)
+            result = self.rep.hats.get_next_by_topping(topping)
             if result is None:
                 raise ValueError(
                     f"Illegal input - no hat was found for order {location},{topping} in line: {line_num}.")
             hat_id, supplier_name = result
 
-            self.db.orders.insert(location, hat_id)
-            self.db.hats.decrement_quantity(hat_id)  # When the quantity drops to 0 - a special trigger deletes it.
-            self.db.commit()
+            self.rep.orders.insert(location, hat_id)
+            self.rep.hats.decrement_quantity(hat_id)  # When the quantity drops to 0 - a special trigger deletes it.
+            self.rep.commit()
             self.output += f"{topping},{supplier_name},{location}\n"
             line_num += 1
 

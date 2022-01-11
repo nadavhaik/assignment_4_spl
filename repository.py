@@ -3,7 +3,7 @@ import os
 from tables import *
 
 
-class DataBase:
+class Repository:
     def __init__(self, output_db_path: str):
         if os.path.isfile(output_db_path):
             # Deleting the old db if exists
