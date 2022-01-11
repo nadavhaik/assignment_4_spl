@@ -13,7 +13,7 @@ class ContextManager:
         with open(self.output_file_path, 'w') as output_file:
             output_file.write(self.output)
 
-    def init_db(self):
+    def read_config_file(self):
         with open(self.config_file_path, 'r') as file:
             config_lines = file.read().splitlines()
 
@@ -52,6 +52,6 @@ class ContextManager:
             line_num += 1
 
     def run(self):
-        self.init_db()
+        self.read_config_file()
         self.execute_orders()
         self.write_output_file()
