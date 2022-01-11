@@ -82,13 +82,11 @@ class ContextManager:
             ORDER BY suppliers.id
             LIMIT 1""", (topping,))
             result = self.cur.fetchone()
-
             if result is None:
                 raise ValueError(f"Illegal input - no hat was found for order {location},{topping} in line: {line_num}.")
             hat_id, supplier_id, supplier_name = result
 
             self.conn.execute("INSERT INTO orders(location, hat) VALUES(?, ?)", (location, hat_id))
-
             self.conn.execute("UPDATE hats SET quantity = quantity-1 WHERE id = ?", (hat_id,))
 
             self.conn.commit()
