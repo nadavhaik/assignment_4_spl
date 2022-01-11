@@ -1,12 +1,12 @@
 import sys
 
-from context_manager import ContextManager
+from pizza_factory import PizzaFactory
 
 
 def main():
     print("Calling make -pizza..")
-    cm = ContextManager(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
-    cm.run()
+    pf = PizzaFactory(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    pf.feed_hungry_people()
     print("                                                      ▓▓▓▓  ▓▓▓▓▓▓▓▓▓▓                                          ")
     print("                                              ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒                                         ")
     print("                                      ▒▒▒▒▓▓▒▒▓▓▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒▒▒▒▒▒▒▒▓▓                                        ")

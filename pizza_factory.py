@@ -1,7 +1,7 @@
 from repository import Repository
 
 
-class ContextManager:
+class PizzaFactory:
     def __init__(self, config_file_path: str, orders_file_path: str, output_file_path: str, output_db_path: str):
         self.config_file_path = config_file_path
         self.orders_file_path = orders_file_path
@@ -51,7 +51,7 @@ class ContextManager:
             self.output += f"{topping},{supplier_name},{location}\n"
             line_num += 1
 
-    def run(self):
+    def feed_hungry_people(self):
         self.populate_db()
         self.execute_orders()
         self.write_output_file()
