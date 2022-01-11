@@ -89,9 +89,7 @@ class ContextManager:
 
             self.conn.execute("INSERT INTO orders(location, hat) VALUES(?, ?)", (location, hat_id))
 
-            self.conn.execute("""UPDATE hats
-            SET quantity = quantity-1
-            WHERE id = ?""", (hat_id,))
+            self.conn.execute("UPDATE hats SET quantity = quantity-1 WHERE id = ?", (hat_id,))
 
             self.conn.commit()
             self.output += f"{topping},{supplier_name},{location}\n"
