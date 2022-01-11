@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# PyCharm shit
+# PyCharm and project shit
 .idea/
+output/
