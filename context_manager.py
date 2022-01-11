@@ -41,8 +41,8 @@ class ContextManager:
             location, topping = order_line.split(",")
             result = self.rep.hats.get_next_by_topping(topping)
             if result is None:
-                raise ValueError(
-                    f"Illegal input - no hat was found for order {location},{topping} in line: {line_num}.")
+                raise ValueError("Illegal input - no hat was found for order "
+                                 +f"{location},{topping} in line: {line_num}.")
             hat_id, supplier_name = result
 
             self.rep.orders.insert(location, hat_id)
