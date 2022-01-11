@@ -48,6 +48,7 @@ class PizzaFactory:
             self.rep.orders.insert(location, hat_id)
             self.rep.hats.decrement_quantity(hat_id)  # When the quantity drops to 0 - a special trigger deletes it.
             self.rep.commit()
+
             self.output += f"{topping},{supplier_name},{location}\n"
             line_num += 1
 
