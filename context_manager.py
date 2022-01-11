@@ -74,7 +74,7 @@ class ContextManager:
         line_num = 1
         for order_line in order_lines:
             location, topping = order_line.split(",")
-            self.cur.execute("""SELECT hats.id, suppliers.id, suppliers.name
+            self.cur.execute("""SELECT hats.id, suppliers.name
             FROM hats
             INNER JOIN suppliers
             ON hats.supplier = suppliers.id
@@ -84,7 +84,7 @@ class ContextManager:
             result = self.cur.fetchone()
             if result is None:
                 raise ValueError(f"Illegal input - no hat was found for order {location},{topping} in line: {line_num}.")
-            hat_id, supplier_id, supplier_name = result
+            hat_id, supplier_name = result
 
             self.conn.execute("INSERT INTO orders(location, hat) VALUES(?, ?)", (location, hat_id))
             self.conn.execute("UPDATE hats SET quantity = quantity-1 WHERE id = ?", (hat_id,))
