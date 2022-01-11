@@ -6,11 +6,10 @@ class ContextManager:
     def __init__(self, config_file_path: str, orders_file_path: str, output_file_path: str, output_db_path: str):
         self.config_file_path = config_file_path
         self.orders_file_path = orders_file_path
-
         self.output_file_path = output_file_path
         self.output = ""
-
         if os.path.isfile(output_db_path):
+            # Deleting the old db if exists
             os.remove(output_db_path)
         self.conn = sqlite3.connect(output_db_path)
         self.cur = self.conn.cursor()
@@ -28,7 +27,7 @@ class ContextManager:
         self.conn.execute("""CREATE TABLE hats(
         id INTEGER PRIMARY KEY,
         topping STRING NOT NULL,
-        supplier INTEGER REFERENCES Supplier(id),
+        supplier INTEGER REFERENCES suppliers(id),
         quantity INTEGER NOT NULL
         )""")
 
