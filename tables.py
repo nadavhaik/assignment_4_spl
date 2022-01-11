@@ -41,12 +41,12 @@ class Hats:
 
     def get_next_by_topping(self, topping: int):
         self._cur.execute("""SELECT hats.id, suppliers.name
-                    FROM hats
-                    INNER JOIN suppliers
-                    ON hats.supplier = suppliers.id
-                    WHERE hats.topping = ?
-                    ORDER BY suppliers.id
-                    LIMIT 1""", (topping,))
+        FROM hats
+        INNER JOIN suppliers
+        ON hats.supplier = suppliers.id
+        WHERE hats.topping = ?
+        ORDER BY suppliers.id
+        LIMIT 1""", (topping,))
         return self._cur.fetchone()
 
     def insert(self, iD: int, topping: str, supplier: int, quantity: int):
