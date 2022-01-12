@@ -1,3 +1,4 @@
+from dtos import *
 from repository import Repository
 
 
@@ -24,11 +25,11 @@ class PizzaFactory:
         # Creating suppliers before hats:
         for i in range(number_of_hats + 1, number_of_hats + number_of_suppliers + 1):
             iD, name = config_lines[i].split(sep=",")
-            self.rep.suppliers.insert(iD, name)
+            self.rep.suppliers.insert(Supplier(iD, name))
 
         for i in range(1, number_of_hats + 1):
             iD, topping, supplier, quantity = config_lines[i].split(sep=",")
-            self.rep.hats.insert(iD, topping, supplier, quantity)
+            self.rep.hats.insert(Hat(iD, topping, supplier, quantity))
 
         self.rep.commit()
 
@@ -39,16 +40,17 @@ class PizzaFactory:
         line_num = 1
         for order_line in order_lines:
             location, topping = order_line.split(",")
-            hat_id, supplier_name = self.rep.hats.get_next_by_topping(topping)
-            if hat_id is None:
+            hat, supplier = self.rep.hats.get_next_by_topping(topping)
+            if hat is None:
                 raise ValueError("Illegal input - no hat was found for order "
                                  +f"{location},{topping} in line: {line_num}.")
 
-            self.rep.orders.insert(location, hat_id)
-            self.rep.hats.decrement_quantity(hat_id)  # When the quantity drops to 0 - a special trigger deletes it.
+            hat.quantity-=1
+            self.rep.orders.insert(Order(location, hat.iD))
+            self.rep.hats.update(hat)  # When the quantity drops to 0 - a special trigger deletes it.
             self.rep.commit()
 
-            self.output += f"{topping},{supplier_name},{location}\n"
+            self.output += f"{topping},{supplier.name},{location}\n"
             line_num += 1
 
     def feed_hungry_people(self):

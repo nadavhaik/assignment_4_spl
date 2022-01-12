@@ -1,4 +1,5 @@
 from sqlite3 import Connection
+from dtos import *
 
 
 class Suppliers:
@@ -12,8 +13,8 @@ class Suppliers:
         name STRING NOT NULL
         )""")
 
-    def insert(self, iD: int, name: str):
-        self._conn.execute("INSERT INTO suppliers(id, name) VALUES(?, ?)", (iD, name))
+    def insert(self, supplier: Supplier):
+        self._conn.execute("INSERT INTO suppliers(id, name) VALUES(?, ?)", (supplier.iD, supplier.name))
 
 
 class Hats:
@@ -41,11 +42,11 @@ class Hats:
         """)
 
     def get_next_by_topping(self, topping: int):
-        # This method retrieves a hat with the given topping.
+        # This method retrieves a Hat with the given topping.
         # If multiple hats provide this topping - it'll choose the one with the minimum supplier.id.
-        # The method returns a tuple(int, str): the id of the chosen hat, and the name of the supplier linked to it.
-        # If no suitable hat was found, the method returns both values None.
-        self._cur.execute("""SELECT hats.id, suppliers.name
+        # It returns a tuple (Hat, Supplier) of the retrieved hat, and it's supplier
+        # If no suitable hat was found, the method returns (None, None)
+        self._cur.execute("""SELECT hats.id, hats.topping, hats.supplier, hats.quantity, suppliers.name
         FROM hats
         INNER JOIN suppliers
         ON hats.supplier = suppliers.id
@@ -56,14 +57,18 @@ class Hats:
         result = self._cur.fetchone()
         if result is None:
             return None, None
-        return result
+        hat = Hat(result[0], result[1], result[2], result[3])
+        supplier = Supplier(result[2], result[4])
 
-    def insert(self, iD: int, topping: str, supplier: int, quantity: int):
+        return hat, supplier
+
+    def insert(self, hat: Hat):
         self._conn.execute("INSERT INTO hats(id, topping, supplier, quantity) VALUES(?, ?, ?, ?)",
-                           (iD, topping, supplier, quantity))
+                           (hat.iD, hat.topping, hat.supplier, hat.quantity))
 
-    def decrement_quantity(self, iD: int):
-        self._conn.execute("UPDATE hats SET quantity = quantity-1 WHERE id = ?", (iD,))
+    def update(self, hat: Hat):
+        self._conn.execute("UPDATE hats SET topping = ?, supplier = ?, quantity = ? WHERE id = ?",
+                           (hat.topping, hat.supplier, hat.quantity, hat.iD))
 
 
 class Orders:
@@ -78,5 +83,5 @@ class Orders:
         hat INTEGER REFERENCES hats(id)
         )""")
 
-    def insert(self, location: str, hat_id: int):
-        self._conn.execute("INSERT INTO orders(location, hat) VALUES(?, ?)", (location, hat_id))
+    def insert(self, order: Order):
+        self._conn.execute("INSERT INTO orders(location, hat) VALUES(?, ?)", (order.location, order.hat))
