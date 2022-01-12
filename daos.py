@@ -58,9 +58,9 @@ class Hats:
         if result is None:
             return None, None
         hat_id, hat_topping, supplier_id, hat_quantity, supplier_name = result
+
         hat = Hat(hat_id, hat_topping, supplier_id, hat_quantity)
         supplier = Supplier(supplier_id, supplier_name)
-
         return hat, supplier
 
     def insert(self, hat: Hat):
