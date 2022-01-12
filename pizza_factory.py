@@ -39,11 +39,10 @@ class PizzaFactory:
         line_num = 1
         for order_line in order_lines:
             location, topping = order_line.split(",")
-            result = self.rep.hats.get_next_by_topping(topping)
-            if result is None:
+            hat_id, supplier_name = self.rep.hats.get_next_by_topping(topping)
+            if hat_id is None:
                 raise ValueError("Illegal input - no hat was found for order "
                                  +f"{location},{topping} in line: {line_num}.")
-            hat_id, supplier_name = result
 
             self.rep.orders.insert(location, hat_id)
             self.rep.hats.decrement_quantity(hat_id)  # When the quantity drops to 0 - a special trigger deletes it.

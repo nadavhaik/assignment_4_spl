@@ -40,6 +40,10 @@ class Hats:
         """)
 
     def get_next_by_topping(self, topping: int):
+        # This method retrieves a hat with the given topping.
+        # If multiple hats provide this topping - it'll choose the one with the minimum supplier.id.
+        # The method returns a tuple(int, str): the id of the chosen hat, and the name of the supplier linked to it.
+        # If no suitable hat was found, the method returns both values None.
         self._cur.execute("""SELECT hats.id, suppliers.name
         FROM hats
         INNER JOIN suppliers
@@ -47,7 +51,11 @@ class Hats:
         WHERE hats.topping = ?
         ORDER BY suppliers.id
         LIMIT 1""", (topping,))
-        return self._cur.fetchone()
+
+        result = self._cur.fetchone()
+        if result is None:
+            return None, None
+        return result
 
     def insert(self, iD: int, topping: str, supplier: int, quantity: int):
         self._conn.execute("INSERT INTO hats(id, topping, supplier, quantity) VALUES(?, ?, ?, ?)",
