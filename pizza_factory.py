@@ -56,3 +56,4 @@ class PizzaFactory:
         self.populate_db()
         self.execute_orders()
         self.write_output_file()
+        self.rep.close()

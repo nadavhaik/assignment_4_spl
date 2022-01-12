@@ -16,3 +16,6 @@ class Repository:
 
     def commit(self):
         self._conn.commit()
+
+    def close(self):
+        self._conn.close()
