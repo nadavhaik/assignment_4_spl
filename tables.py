@@ -30,6 +30,7 @@ class Hats:
         quantity INTEGER NOT NULL
         )""")
 
+        # This trigger is responsible for deleting a hat when it's quantity drops to zero
         self._conn.execute("""CREATE TRIGGER hats_delete_zero_quantity
         AFTER UPDATE OF quantity ON hats
         FOR EACH ROW
