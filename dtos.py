@@ -13,8 +13,6 @@ class Hat:
 
 
 class Order:
-    def __init__(self, location: str, hat: int, iD: int = None):    # The id is calculated in DB -
-                                                                    # isn't necessary for inserts.
+    def __init__(self, location: str, hat: int):
         self.location = location
         self.hat = hat
-        self.iD = iD

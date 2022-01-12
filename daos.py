@@ -57,8 +57,9 @@ class Hats:
         result = self._cur.fetchone()
         if result is None:
             return None, None
-        hat = Hat(result[0], result[1], result[2], result[3])
-        supplier = Supplier(result[2], result[4])
+        hat_id, hat_topping, supplier_id, hat_quantity, supplier_name = result
+        hat = Hat(hat_id, hat_topping, supplier_id, hat_quantity)
+        supplier = Supplier(supplier_id, supplier_name)
 
         return hat, supplier
 
